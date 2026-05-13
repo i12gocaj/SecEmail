@@ -1,0 +1,52 @@
+Return-Path: <bob@example.org>
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.220.76])
+	by mx.target.example with Microsoft SMTP Server (TLS) id 15.20.7565.20
+	for <victim@target.example>; Tue, 12 May 2026 18:45:02 +0000
+X-Test-Fixture-Purpose: Microsoft 365 outgoing email with Exchange Online headers + DKIM
+Authentication-Results: spf.protection.outlook.com;
+	spf=pass (sender IP is 40.107.220.76) smtp.mailfrom=example.org;
+	dkim=pass (signature was verified) header.d=example.org;
+	dmarc=pass action=none header.from=example.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=example.org;
+	s=selector1; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=h7DyEbCqfDeI4GVRO9X9LakO4kNRsT13ZIQ9hCgGwzpAQ4tcOhT3jRTLgrLkiTRHDNqJoHvuYIcrhWZQbNZD0SDR3WgWAebLR0RIw9oCT0RDDIDDOZQXcJ2nQERFvE2AJpqgTLpGcK6X9P5z6Lz/0BSlPaUOzgEpc1MWZ9YBnbA=
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-AuthSource: NAM10MW2.namprd10.prod.outlook.com
+X-MS-Exchange-Organization-Network-Message-Id: 1234abcd-5678-90ef-1234-567890abcdef
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Mailbox-Delivery: ucf:0;jmr:0;auth:0;dest:I;ENG:(910001)(944506478)(944626604);
+X-Microsoft-Antispam-Message-Info: vK0SsVrZZ7uxXf9JqyQqQ==
+MIME-Version: 1.0
+From: "Bob Smith" <bob@example.org>
+To: "Victim User" <victim@target.example>
+Subject: Quarterly business review attached
+Date: Tue, 12 May 2026 18:45:00 +0000
+Message-ID: <SN6PR10MB30141A2B3C4D5E6F708192A3B4C5D6E7@SN6PR10MB3014.namprd10.prod.outlook.com>
+Content-Type: multipart/alternative; boundary="_000_SN6PR10MB30141A2B3C4D5E6F708192A_"
+
+--_000_SN6PR10MB30141A2B3C4D5E6F708192A_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hello,
+
+Please find attached the QBR materials for review.
+
+Best,
+Bob
+
+--_000_SN6PR10MB30141A2B3C4D5E6F708192A_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charse=
+t=3Dutf-8"></head><body style=3D"font-family: Calibri, sans-serif; font-si=
+ze: 11pt;">
+<p>Hello,</p>
+<p>Please find attached the QBR materials for review.</p>
+<p>Best,<br>Bob</p>
+</body></html>
+
+--_000_SN6PR10MB30141A2B3C4D5E6F708192A_--

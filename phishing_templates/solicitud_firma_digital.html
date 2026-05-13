@@ -1,0 +1,97 @@
+<!-- SecEmail template — authorized engagements only.
+     Pretext: Electronic signature request with urgency framing.
+     Vector: Credential phish on signature platform landing.
+     Subject suggestion: "Action required: sign «{{DOCUMENT_NAME}}» before {{EXPIRES_DATE}}".
+     Runtime placeholders: {{COMPANY_NAME}}, {{TARGET_EMAIL}}, {{TARGET_NAME}},
+       {{SENDER_NAME}}, {{SENDER_TITLE}}, {{DOCUMENT_NAME}}, {{DOCUMENT_PAGES}},
+       {{ENVELOPE_ID}}, {{EXPIRES_DATE}}, {{HOURS_LEFT}}, {{LURE_URL}}, {{PIXEL_URL}}. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<title>Document pending your signature</title>
+</head>
+<body style="margin:0;padding:0;background:#f7f8fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1a2333;-webkit-font-smoothing:antialiased;line-height:1.5;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f7f8fa;padding:40px 16px;">
+  <tr><td align="center">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e3e6ed;box-shadow:0 1px 4px rgba(15,30,55,0.05);">
+
+      <!-- Sober header -->
+      <tr><td style="background:#1d3557;padding:16px 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr>
+            <td>
+              <span style="color:#ffffff;font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;">E-signature · {{COMPANY_NAME}}</span>
+            </td>
+            <td align="right">
+              <span style="color:#a8c3df;font-size:11px;letter-spacing:0.5px;font-weight:500;">Confidential</span>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- Body -->
+      <tr><td style="padding:32px 32px 8px 32px;">
+        <span style="display:inline-block;padding:5px 12px;background:#fdf2d0;border:1px solid #f0d678;border-radius:14px;font-size:11px;color:#92670c;font-weight:700;letter-spacing:0.6px;margin-bottom:14px;text-transform:uppercase;">Awaiting signature · expires in {{HOURS_LEFT}} h</span>
+
+        <h1 style="margin:0 0 8px 0;font-size:21px;font-weight:600;color:#1a2333;line-height:1.35;letter-spacing:-0.2px;">
+          Hi {{TARGET_NAME}}, you have a document pending
+        </h1>
+        <p style="margin:0;font-size:14px;color:#4d5a72;line-height:1.55;">
+          <strong style="color:#1a2333;">{{SENDER_NAME}}</strong> ({{SENDER_TITLE}}) has sent you a document for review and signature. Takes less than 2 minutes.
+        </p>
+      </td></tr>
+
+      <!-- Document card -->
+      <tr><td style="padding:22px 32px 12px 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f7f8fa;border:1px solid #e3e6ed;border-radius:8px;">
+          <tr><td style="padding:18px 20px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td style="vertical-align:top;width:44px;">
+                  <div style="width:36px;height:46px;background:linear-gradient(135deg,#d23434 0%,#b82929 100%);border-radius:4px;text-align:center;line-height:46px;color:#ffffff;font-size:10px;font-weight:700;letter-spacing:0.8px;">PDF</div>
+                </td>
+                <td style="vertical-align:top;padding-left:14px;">
+                  <div style="font-size:14px;font-weight:600;color:#1a2333;line-height:1.35;">{{DOCUMENT_NAME}}</div>
+                  <div style="font-size:12px;color:#6a7384;margin-top:4px;">{{DOCUMENT_PAGES}} pages · legal timestamp</div>
+                  <div style="font-size:10px;color:#90a0b5;margin-top:8px;font-family:'SF Mono',Menlo,Consolas,monospace;letter-spacing:0.3px;">ID: {{ENVELOPE_ID}}</div>
+                </td>
+              </tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- Summary -->
+      <tr><td style="padding:8px 32px 24px 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr>
+            <td style="padding:6px 0;font-size:12px;color:#6a7384;">Deadline</td>
+            <td align="right" style="padding:6px 0;font-size:13px;color:#d23434;font-weight:600;">{{EXPIRES_DATE}}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;font-size:12px;color:#6a7384;border-top:1px solid #f0f2f5;">Signer</td>
+            <td align="right" style="padding:6px 0;font-size:13px;color:#1a2333;font-weight:500;border-top:1px solid #f0f2f5;">{{TARGET_EMAIL}}</td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- CTA -->
+      <tr><td align="center" style="padding:0 32px 32px 32px;">
+        <a href="{{LURE_URL}}" style="display:inline-block;padding:13px 48px;background:#f5a623;color:#1a2333;text-decoration:none;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Review and sign</a>
+        <div style="margin-top:14px;font-size:12px;color:#6a7384;">Timestamp and legal traceability on every signature.</div>
+      </td></tr>
+
+      <!-- Footer -->
+      <tr><td style="padding:16px 32px;background:#f7f8fa;border-top:1px solid #e3e6ed;font-size:11px;line-height:1.6;color:#90a0b5;">
+        If you weren't expecting this document or don't recognize {{SENDER_NAME}}, don't sign and verify through an independent channel before acting. Never share this link.
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+<img src="{{PIXEL_URL}}" width="1" height="1" alt="" style="display:block;border:0;outline:none;opacity:0;">
+</body>
+</html>

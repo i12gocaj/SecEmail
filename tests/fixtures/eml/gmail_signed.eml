@@ -1,0 +1,39 @@
+Return-Path: <alice@example.com>
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	by mx.gmail.com with ESMTPS id abc123def456ghi789
+	(version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384)
+	for <victim@target.example>; Tue, 12 May 2026 10:23:18 -0700 (PDT)
+X-Test-Fixture-Purpose: Gmail Workspace outgoing email with DKIM/SPF/DMARC PASS in AR
+Authentication-Results: mx.google.com;
+	spf=pass (google.com: domain of alice@example.com designates 209.85.128.178 as permitted sender) smtp.mailfrom=alice@example.com;
+	dkim=pass header.i=@example.com header.s=google header.b=B+OkwQfq;
+	dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=example.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=example.com; s=google;
+	h=mime-version:from:date:message-id:subject:to;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=B+OkwQfqlrIqzN2yjEyVoxnYwAfaWWtoT7BfvuxYsxLM1mPiKHL3aBn0Pdt/AwMlqWiC2c2BcLZIE6BJ7FelKr6PT5xCe/RxIBs0lQ4WqfYz0Cn5pcEsxIBb7uPiCJDrrBnAfTewFhPjjAdU/wkjbBdwM7eMnyhBQqfh4hOLqOY=
+MIME-Version: 1.0
+From: Alice <alice@example.com>
+Date: Tue, 12 May 2026 10:23:15 -0700
+Message-ID: <CAH+1cQYy_NkBvHzGq4f5L9pXqVwK8M3uR7eA2dFbWxYn8C4Vmw@mail.gmail.com>
+Subject: Project update for Q2
+To: victim@target.example
+Content-Type: multipart/alternative; boundary="000000000000abc123def456"
+
+--000000000000abc123def456
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Bob,
+
+Quick update: the Q2 plan is on track. Let me know if you need anything.
+
+Cheers,
+Alice
+
+--000000000000abc123def456
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Hi Bob,<br><br>Quick update: the Q2 plan is on track. Let me know if you need anything.<br><br>Cheers,<br>Alice</div>
+
+--000000000000abc123def456--

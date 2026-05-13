@@ -1,0 +1,91 @@
+{
+  "checks": [
+    {
+      "details": [
+        "SPF record found at example.test: v=spf1 -all",
+        "Recursive SPF DNS lookups: 0 (limit 10). Chain: example.test"
+      ],
+      "evidence": "dns_only",
+      "exact_fixes": [],
+      "implications": [],
+      "missing": [],
+      "protocol": "SPF",
+      "recommendations": [],
+      "status": "PASS",
+      "verified_domains": []
+    },
+    {
+      "details": [
+        "Valid DKIM key found for selector 'default' at default._domainkey.example.test."
+      ],
+      "evidence": "dns_only",
+      "exact_fixes": [],
+      "implications": [],
+      "missing": [],
+      "protocol": "DKIM",
+      "recommendations": [],
+      "status": "PASS",
+      "verified_domains": []
+    },
+    {
+      "details": [
+        "DMARC record found at _dmarc.example.test: v=DMARC1; p=reject; rua=mailto:dmarc@example.test"
+      ],
+      "evidence": "dns_only",
+      "exact_fixes": [],
+      "implications": [],
+      "missing": [],
+      "protocol": "DMARC",
+      "recommendations": [],
+      "status": "PASS",
+      "verified_domains": []
+    },
+    {
+      "details": [
+        "With only an address/domain the ARC chain cannot be validated."
+      ],
+      "evidence": "not_applicable",
+      "exact_fixes": [
+        "Export a real .eml from a forwarding flow and run it with --file to validate ARC end-to-end."
+      ],
+      "implications": [
+        "You will not detect whether a malicious forwarding chain is altering or hiding authentication."
+      ],
+      "missing": [],
+      "protocol": "ARC",
+      "recommendations": [
+        "To validate ARC you need a real .eml with ARC-Seal, ARC-Message-Signature and ARC-Authentication-Results."
+      ],
+      "status": "INFO",
+      "verified_domains": []
+    },
+    {
+      "details": [
+        "`example.test` does not contain obvious lookalike / IDN-homograph patterns."
+      ],
+      "evidence": "dns_only",
+      "exact_fixes": [],
+      "implications": [],
+      "missing": [],
+      "protocol": "LOOKALIKE",
+      "recommendations": [],
+      "status": "INFO",
+      "verified_domains": []
+    }
+  ],
+  "envelope_from_domain": "example.test",
+  "from_domain": "example.test",
+  "input_mode": "domain",
+  "metadata": {
+    "schema_version": "2.0"
+  },
+  "return_path_domain": "example.test",
+  "schema_version": "2.0",
+  "summary": {
+    "FAIL": 0,
+    "INFO": 2,
+    "PASS": 3,
+    "WARN": 0
+  },
+  "target": "example.test"
+}

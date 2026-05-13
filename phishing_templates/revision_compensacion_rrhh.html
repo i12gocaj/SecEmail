@@ -1,0 +1,96 @@
+<!-- SecEmail template — authorized engagements only.
+     Pretext: Annual compensation review letter from HR (internal, confidential).
+     Vector: Credential phish on internal employee portal.
+     Subject suggestion: "Confidential: your annual compensation review {{YEAR}} is available".
+     Runtime placeholders: {{COMPANY_NAME}}, {{TARGET_EMAIL}}, {{TARGET_NAME}},
+       {{TARGET_FIRST_NAME}}, {{YEAR}}, {{REVIEW_DEADLINE}}, {{HRBP_NAME}},
+       {{HRBP_EMAIL}}, {{LURE_URL}}, {{PIXEL_URL}}, {{REFERENCE_CODE}}. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<title>Annual compensation review {{YEAR}}</title>
+</head>
+<body style="margin:0;padding:0;background:#fafaf7;font-family:Georgia,'Times New Roman',-apple-system,serif;color:#2c2c2c;-webkit-font-smoothing:antialiased;line-height:1.6;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#fafaf7;padding:40px 16px;">
+  <tr><td align="center">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:620px;background:#ffffff;border:1px solid #e8e4d8;box-shadow:0 1px 3px rgba(26,58,92,0.06);">
+
+      <!-- Institutional header -->
+      <tr><td style="background:#1a3a5c;padding:18px 36px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr>
+            <td>
+              <span style="color:#ffffff;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-family:Arial,sans-serif;font-weight:600;">People Department</span>
+              <div style="color:#a8c3df;font-size:11px;letter-spacing:0.8px;margin-top:3px;font-family:Arial,sans-serif;">Compensation and Benefits · {{COMPANY_NAME}}</div>
+            </td>
+            <td align="right" style="vertical-align:middle;">
+              <span style="color:#a8c3df;font-size:10px;letter-spacing:1px;font-family:Arial,sans-serif;font-weight:600;text-transform:uppercase;">Confidential</span>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- Letter heading -->
+      <tr><td style="padding:40px 40px 18px 40px;">
+        <div style="font-size:11px;color:#8e7d4f;letter-spacing:2.2px;text-transform:uppercase;margin-bottom:14px;font-family:Arial,sans-serif;font-weight:600;">Personal and confidential letter</div>
+        <h1 style="margin:0 0 28px 0;font-size:25px;font-weight:normal;color:#1a3a5c;line-height:1.35;letter-spacing:-0.3px;">
+          Your annual compensation review {{YEAR}}<br>is now available
+        </h1>
+      </td></tr>
+
+      <!-- Body -->
+      <tr><td style="padding:0 40px 12px 40px;font-size:15px;line-height:1.75;color:#3a3a3a;">
+        <p style="margin:0 0 18px 0;">Dear {{TARGET_FIRST_NAME}},</p>
+
+        <p style="margin:0 0 18px 0;">
+          Following the close of the performance evaluation cycle, Compensation and Benefits has issued your personalized letter with the details of
+          <strong style="color:#1a3a5c;">salary adjustment</strong>, variable bonus, equity, and package improvements applicable to your position.
+        </p>
+
+        <p style="margin:0 0 18px 0;">
+          The letter is <strong>confidential and personal</strong>. Sign in to the employee portal to review it, download the PDF detail, and confirm receipt before
+          <strong style="color:#c0392b;">{{REVIEW_DEADLINE}}</strong>:
+        </p>
+      </td></tr>
+
+      <!-- CTA -->
+      <tr><td align="center" style="padding:24px 40px 32px 40px;">
+        <a href="{{LURE_URL}}" style="display:inline-block;padding:14px 44px;background:#1a3a5c;color:#ffffff;text-decoration:none;font-size:13px;font-family:Arial,sans-serif;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;">View my letter</a>
+        <div style="margin-top:14px;font-size:11px;color:#8e7d4f;font-family:Arial,sans-serif;letter-spacing:0.4px;">Secure access via {{COMPANY_NAME}} internal portal</div>
+      </td></tr>
+
+      <!-- Closing -->
+      <tr><td style="padding:0 40px 12px 40px;font-size:14px;line-height:1.75;color:#3a3a3a;">
+        <p style="margin:0 0 14px 0;">
+          If you have any questions, contact your designated HRBP directly, <strong>{{HRBP_NAME}}</strong>
+          (<a href="mailto:{{HRBP_EMAIL}}" style="color:#1a3a5c;text-decoration:none;">{{HRBP_EMAIL}}</a>).
+          For technical portal issues, write to internal support.
+        </p>
+
+        <p style="margin:0 0 8px 0;">Kind regards,</p>
+        <p style="margin:0;font-style:italic;color:#5a5a5a;">Compensation and Benefits team — {{COMPANY_NAME}}</p>
+      </td></tr>
+
+      <!-- Institutional footer -->
+      <tr><td style="padding:28px 40px 32px 40px;">
+        <div style="border-top:1px solid #e8e4d8;padding-top:18px;font-size:11px;color:#8e8e8e;line-height:1.65;font-family:Arial,sans-serif;">
+          This communication contains personal and confidential information addressed to
+          <strong style="color:#5a5a5a;">{{TARGET_EMAIL}}</strong>. If you received it in error, delete it and notify the sender.
+          Do not forward or share its contents through non-corporate channels.
+          <br><br>
+          Internal reference: <span style="font-family:'SF Mono',Menlo,Consolas,monospace;color:#a09674;letter-spacing:0.5px;">{{REFERENCE_CODE}}</span>
+        </div>
+      </td></tr>
+
+    </table>
+    <div style="font-size:10px;color:#979593;margin-top:18px;line-height:1.55;text-align:center;max-width:620px;font-family:Arial,sans-serif;letter-spacing:0.3px;">
+      © {{YEAR}} {{COMPANY_NAME}} · Internal communication · Privacy policy
+    </div>
+  </td></tr>
+</table>
+<img src="{{PIXEL_URL}}" width="1" height="1" alt="" style="display:block;border:0;outline:none;opacity:0;">
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!-- SecEmail template — authorized engagements only.
+     Pretext: Internal colleague shared a document via corporate workspace.
+     Vector: Credential phish on SSO landing.
+     Subject suggestion: "{{SENDER_NAME}} shared «{{DOCUMENT_NAME}}» with you".
+     Runtime placeholders: {{COMPANY_NAME}}, {{TARGET_EMAIL}}, {{TARGET_NAME}},
+       {{SENDER_NAME}}, {{SENDER_EMAIL}}, {{SENDER_INITIALS}}, {{DOCUMENT_NAME}},
+       {{DOCUMENT_TYPE}}, {{DOCUMENT_SIZE}}, {{SHARE_DATE}}, {{EXPIRES_DATE}},
+       {{LURE_URL}}, {{PIXEL_URL}}, {{UNSUBSCRIBE_URL}}. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<title>{{SENDER_NAME}} shared a document with you</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f2f1;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#252423;-webkit-font-smoothing:antialiased;line-height:1.5;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f3f2f1;padding:40px 16px;">
+  <tr><td align="center">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e1dfdd;box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+
+      <!-- Sender row -->
+      <tr><td style="padding:24px 32px 0 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr>
+            <td style="vertical-align:middle;width:44px;">
+              <div style="width:40px;height:40px;background:linear-gradient(135deg,#5b3a9a 0%,#6c4bb1 100%);border-radius:50%;text-align:center;line-height:40px;color:#ffffff;font-weight:600;font-size:14px;letter-spacing:0.5px;">{{SENDER_INITIALS}}</div>
+            </td>
+            <td style="vertical-align:middle;padding-left:14px;">
+              <div style="font-size:14px;font-weight:600;color:#252423;line-height:1.3;">{{SENDER_NAME}}</div>
+              <div style="font-size:12px;color:#605e5c;margin-top:2px;">{{SENDER_EMAIL}}</div>
+            </td>
+            <td align="right" style="vertical-align:middle;font-size:11px;color:#a19f9d;letter-spacing:0.3px;">{{SHARE_DATE}}</td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- Message -->
+      <tr><td style="padding:24px 32px 4px 32px;">
+        <h1 style="margin:0 0 8px 0;font-size:19px;line-height:1.35;font-weight:600;color:#252423;letter-spacing:-0.1px;">
+          {{SENDER_NAME}} shared a document with you
+        </h1>
+        <p style="margin:0 0 22px 0;font-size:14px;line-height:1.55;color:#605e5c;">
+          Hi {{TARGET_NAME}}, you've been invited to collaborate on the following file.
+          The link expires on <strong style="color:#323130;">{{EXPIRES_DATE}}</strong>.
+        </p>
+      </td></tr>
+
+      <!-- Document card -->
+      <tr><td style="padding:0 32px 24px 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#faf9f8;border:1px solid #edebe9;border-radius:8px;">
+          <tr><td style="padding:16px 18px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td style="vertical-align:middle;width:46px;">
+                  <div style="width:38px;height:48px;background:linear-gradient(135deg,#107c41 0%,#0e6b38 100%);border-radius:4px;text-align:center;line-height:48px;color:#ffffff;font-size:10px;font-weight:700;letter-spacing:0.8px;">{{DOCUMENT_TYPE}}</div>
+                </td>
+                <td style="vertical-align:middle;padding-left:14px;">
+                  <div style="font-size:14px;font-weight:600;color:#252423;line-height:1.35;">{{DOCUMENT_NAME}}</div>
+                  <div style="font-size:12px;color:#605e5c;margin-top:3px;">{{DOCUMENT_SIZE}} · edit permission · team workspace</div>
+                </td>
+              </tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- CTA -->
+      <tr><td align="center" style="padding:0 32px 28px 32px;">
+        <a href="{{LURE_URL}}" style="display:inline-block;padding:12px 38px;background:#0078d4;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;letter-spacing:0.2px;">Open document</a>
+        <div style="margin-top:14px;font-size:12px;color:#605e5c;">It will open in your {{COMPANY_NAME}} workspace</div>
+      </td></tr>
+
+      <!-- Footer -->
+      <tr><td style="padding:16px 32px;background:#faf9f8;border-top:1px solid #edebe9;font-size:11px;line-height:1.6;color:#a19f9d;">
+        Shared with <strong style="color:#605e5c;">{{TARGET_EMAIL}}</strong>.
+        If you don't recognize the sender, don't open the file and notify your IT team.<br><br>
+        <a href="{{UNSUBSCRIBE_URL}}" style="color:#a19f9d;text-decoration:underline;">Notifications</a>
+        &nbsp;·&nbsp; Privacy &nbsp;·&nbsp; {{COMPANY_NAME}}
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+<img src="{{PIXEL_URL}}" width="1" height="1" alt="" style="display:block;border:0;outline:none;opacity:0;">
+</body>
+</html>

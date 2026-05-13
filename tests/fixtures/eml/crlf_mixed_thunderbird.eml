@@ -1,0 +1,22 @@
+Return-Path: <user@example.com>
+Received: from mail.example.com (mail.example.com [203.0.113.5])
+	by mx.target.example with ESMTP id thunderbird42
+	for <victim@target.example>; Mon, 11 May 2026 15:30:00 +0200
+X-Test-Fixture-Purpose: P1 A6 — LF-only export (Thunderbird-style) must be normalized to CRLF
+X-Mailer: Mozilla Thunderbird 115.10.0
+MIME-Version: 1.0
+From: User <user@example.com>
+To: victim@target.example
+Subject: LF-only export test
+Date: Mon, 11 May 2026 15:29:55 +0200
+Message-ID: <c2d4f6a8-b9e1-4f37-9c3a-7d5e8f0b1a2c@example.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+This message was exported from Thunderbird with LF-only line endings.
+secemail should normalize before doing any cryptographic verification.
+
+Regards,
+User

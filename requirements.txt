@@ -1,0 +1,6 @@
+dnspython>=2.6
+dkimpy[ARC,ed25519]>=1.1.8
+pyspf>=2.0.14
+publicsuffix2>=2.20191221
+cryptography>=42
+rich>=13

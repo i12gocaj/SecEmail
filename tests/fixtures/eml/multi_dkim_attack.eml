@@ -1,0 +1,36 @@
+Return-Path: <newsletter@mailer.legitimo.tld>
+Received: from out1.mailer.legitimo.tld (out1.mailer.legitimo.tld [192.0.2.10])
+	by mx.target.example with ESMTPS id deadbeefcafe123
+	for <victim@target.example>; Tue, 12 May 2026 09:00:00 +0000
+X-Test-Fixture-Purpose: P0-1 multi-DKIM attack — adversarial d= must NOT count for DMARC alignment
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=mailer.legitimo.tld; s=k1;
+	h=from:to:subject:date:message-id:mime-version:content-type;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=kT2cD/4kCDIaIIvNXVtUk5L4Y3lLwLZmDvxRtTRsScjJVNG83Slc0+JT22cMu1zkF5XLvjwHHvOAbjGYM6Su3CnHC8VTKt5XaQOnUC7n9C2vC9Mt2EhYNg/N7HCx6hLiLyqr80NgVtNQTzKuC4LPlOTSr/zaUbW4hUYjLD4Ohjg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=victim.example; s=fake;
+	h=from:to:subject:date:message-id;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=AAAAbasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasurabasura/AAAA=
+MIME-Version: 1.0
+From: Victim Inc <noreply@victim.example>
+To: victim@target.example
+Subject: Your monthly statement is ready
+Date: Tue, 12 May 2026 08:59:55 +0000
+Message-ID: <202605120859.55.deadbeef@mailer.legitimo.tld>
+Content-Type: multipart/alternative; boundary="--==boundary_legit_42==--"
+
+----==boundary_legit_42==--
+Content-Type: text/plain; charset=UTF-8
+
+Your monthly statement from Victim Inc is now available.
+Log in at https://victim.example to view it.
+
+----==boundary_legit_42==--
+Content-Type: text/html; charset=UTF-8
+
+<p>Your monthly statement from Victim Inc is now available.</p>
+<p><a href="https://victim.example">Log in</a> to view it.</p>
+
+----==boundary_legit_42==----

@@ -1,0 +1,26 @@
+SecEmail — Restricted Use License (Authorized Engagements Only)
+
+Copyright (c) 2026 SecEmail contributors
+
+Permission is granted to use, copy, and modify this software solely for:
+  (a) authorized security assessments with written client authorization;
+  (b) defensive security analysis of email infrastructure you own or operate;
+  (c) academic research and CTF-style training in isolated environments.
+
+ANY OTHER USE IS PROHIBITED. In particular, this software MUST NOT be used:
+  - to send unsolicited email to recipients without prior written authorization
+    from the owner of the destination domain;
+  - to spoof, impersonate, or harvest credentials outside the explicit scope of
+    a documented red team engagement;
+  - to bypass anti-phishing, anti-spam, or anti-abuse controls outside an
+    authorized test;
+  - in any way that violates applicable law (including but not limited to GDPR,
+    LOPDGDD, CFAA, CMA 1990, and analogous national statutes).
+
+The authors and contributors provide NO WARRANTY and accept NO LIABILITY for
+any use of this software. The operator bears full legal responsibility for
+obtaining authorization, scoping engagements, and complying with applicable
+regulations.
+
+By using this software you acknowledge that you have read and accepted these
+terms.

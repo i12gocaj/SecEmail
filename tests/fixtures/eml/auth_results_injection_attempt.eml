@@ -1,0 +1,22 @@
+Return-Path: <attacker@evil.example>
+Received: from evil.example (evil.example [198.51.100.99])
+	by trusted-mx.example.com with ESMTP id atk42xy
+	for <victim@target.example>; Sun, 10 May 2026 03:14:15 +0000
+X-Test-Fixture-Purpose: P1 A7 — Authentication-Results injection via leading RFC5322 comment
+Authentication-Results: trusted-mx.example.com;
+	spf=fail (sender IP 198.51.100.99 is not authorized) smtp.mailfrom=victim.example;
+	dkim=fail (signature did not verify);
+	dmarc=fail action=quarantine header.from=victim.example
+Authentication-Results: (note) trusted-mx.example.com;
+	spf=pass smtp.mailfrom=victim.example;
+	dkim=pass header.d=victim.example;
+	dmarc=pass header.from=victim.example
+MIME-Version: 1.0
+From: "Security Team" <security@victim.example>
+To: victim@target.example
+Subject: URGENT: verify your account immediately
+Date: Sun, 10 May 2026 03:14:10 +0000
+Message-ID: <injected42@evil.example>
+Content-Type: text/plain; charset=UTF-8
+
+Click here to verify: https://evil.example/verify?id=42

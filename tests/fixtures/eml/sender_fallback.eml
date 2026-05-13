@@ -1,0 +1,27 @@
+Return-Path: <ceo@example.com>
+Received: from mail.example.com (mail.example.com [203.0.113.10])
+	by mx.target.example with ESMTPS id grp42snd
+	for <victim@target.example>; Wed, 13 May 2026 08:00:00 +0000
+X-Test-Fixture-Purpose: P1 A5 — multi-address From triggers Sender fallback for DMARC alignment
+MIME-Version: 1.0
+From: "Alice, Bob" <alice@example.com>, "Bob Builder" <bob@example.com>
+Sender: ceo@example.com
+To: victim@target.example
+Subject: Joint announcement
+Date: Wed, 13 May 2026 07:59:50 +0000
+Message-ID: <jointgroupannouncement42@example.com>
+Content-Type: multipart/alternative; boundary="==grp_boundary_42=="
+
+--==grp_boundary_42==
+Content-Type: text/plain; charset=UTF-8
+
+Hello team,
+
+Joint announcement from Alice and Bob, signed off by the CEO.
+
+--==grp_boundary_42==
+Content-Type: text/html; charset=UTF-8
+
+<p>Hello team,</p><p>Joint announcement from Alice and Bob, signed off by the CEO.</p>
+
+--==grp_boundary_42==--
