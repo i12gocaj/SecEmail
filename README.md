@@ -8,7 +8,7 @@ It does three things well:
 2. Sends spoofed emails over SMTP for authorized engagements, with optional tracking, a capture server for credentials, and per campaign reporting.
 3. Keeps a forensic log of everything you do, so months later you can still answer "what did I send, when, and why".
 
-Everything is in English. Everything runs offline against your own DNS. You get a guided menu by default so you don't need to memorize twenty flags.
+Everything runs offline against your own DNS. You get a guided menu by default so you don't need to memorize twenty flags.
 
 ## What it looks like
 
