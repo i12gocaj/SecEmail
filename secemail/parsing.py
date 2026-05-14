@@ -246,9 +246,9 @@ def parse_authentication_results(
                         is_trusted = False
                         if warnings_out is not None:
                             warnings_out.append(
-                                f"Authentication-Results duplicado con authserv_id={authserv_id!r} "
-                                f"y proto={proto!r} (header #{header_idx + 1}): degradado a untrusted "
-                                "para defenderse contra inyección post-MTA (RFC 8601 §5)."
+                                f"Authentication-Results duplicated with authserv_id={authserv_id!r} "
+                                f"and proto={proto!r} (header #{header_idx + 1}): downgraded to untrusted "
+                                "to defend against post-MTA injection (RFC 8601 §5)."
                             )
                     else:
                         seen_trusted_pairs.add(key)

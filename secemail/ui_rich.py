@@ -63,29 +63,10 @@ def render_report_rich(report: AuditReport, console: "Console | None" = None) ->
         info.add_row("DNS backend", f"[dim]{report.dns_backend}[/dim]")
     console.print(Panel(info, title="[bold]Information[/bold]", border_style="cyan", box=ROUNDED, padding=(0, 1)))
 
-    # ─── Resumen ejecutivo ──────────────────────────────────────────────
-    summary = report.summary
-    counts = Table.grid(padding=(0, 3))
-    counts.add_column(justify="center")
-    counts.add_column(justify="center")
-    counts.add_column(justify="center")
-    counts.add_column(justify="center")
-    counts.add_row(
-        f"[bold green]{summary.get('PASS', 0)}[/bold green]\n[dim]PASS[/dim]",
-        f"[bold yellow]{summary.get('WARN', 0)}[/bold yellow]\n[dim]WARN[/dim]",
-        f"[bold red]{summary.get('FAIL', 0)}[/bold red]\n[dim]FAIL[/dim]",
-        f"[bold cyan]{summary.get('INFO', 0)}[/bold cyan]\n[dim]INFO[/dim]",
-    )
-    verdict = _verdict_text_for(report)
-    console.print(Panel(
-        Group(counts, Text(""), verdict),
-        title="[bold]Summary[/bold]",
-        border_style=_verdict_color(summary),
-        box=ROUNDED,
-        padding=(1, 2),
-    ))
-
     # ─── Priority actions ───────────────────────────────────────────────
+    # Note: we used to render a "Summary" panel here AND a "Final summary"
+    # panel at the bottom. Duplicate counts + duplicate verdict felt redundant
+    # in a single screen. We now render the summary only once, at the end.
     actions = _collect_actions(report)
     if actions:
         t = Text()

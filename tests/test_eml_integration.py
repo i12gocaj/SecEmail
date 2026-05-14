@@ -267,7 +267,7 @@ def test_auth_results_injection_fail_wins_over_injected_pass(monkeypatch):
     injection_warnings = report.metadata.get("ar_injection_warnings", [])
     assert injection_warnings, "Debe haber warnings de AR injection en metadata"
     blob = " ".join(injection_warnings).lower()
-    assert "duplicado" in blob and "trusted-mx.example.com" in blob
+    assert "duplicated" in blob and "trusted-mx.example.com" in blob
 
 
 # --------------------------------------------------------------------------- #

@@ -27,6 +27,7 @@ To use any of them in an engagement, the operator must:
 | `solicitud_firma_digital.html` | "1 document awaiting your signature" | Credential phish + lateral | High |
 | `buzon_de_voz.html` | "New voice message of {{VOICEMAIL_DURATION}}" | Credential phish or attachment | Medium |
 | `revision_compensacion_rrhh.html` | "Your annual compensation review is available" | Internal portal credential phish | Very high |
+| `quishing_paquete_aduana.html` | "Customs package on hold, scan QR to pay duty" | QR-based credential phish (bypasses URL filters) | Medium |
 
 The expected CTRs are indicative: they depend on the maturity of the client's defenses, the quality of the lookalike, and the level of per-target personalization.
 
@@ -89,7 +90,7 @@ Recommended before the first send:
 
 ## Quishing (QR phishing)
 
-If you need a QR variant (a growing vector in 2026 because it bypasses URL filters), generate the QR pointing at `{{LURE_URL}}` with an external generator and embed it as a base64 `<img>`. We do not include a specific template because the visual decision (where to place the QR, what pretext) depends on context.
+We ship `quishing_paquete_aduana.html` as a starting QR-phishing pretext (customs package on hold). Generate a QR pointing at `{{LURE_URL}}` with any external generator and embed it as base64 in the placeholder `<img>` tag. The visual placement and pretext copy still depend on the engagement, so treat the template as a scaffold rather than a final asset.
 
 ## License
 

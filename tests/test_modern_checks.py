@@ -672,7 +672,7 @@ def test_ar_injection_with_same_authservid_first_wins_rfc8601():
     assert data["dmarc"][1]["trusted"] == "false"
     # 3 warnings: uno por proto duplicado (spf, dkim, dmarc).
     assert len(warnings) == 3
-    assert all("duplicado" in w and "mx.empresa.com" in w for w in warnings)
+    assert all("duplicated" in w and "mx.empresa.com" in w for w in warnings)
 
 
 def test_ar_legitimate_followed_by_different_authservid_both_stay_trusted_if_both_in_allowlist():

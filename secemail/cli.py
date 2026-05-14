@@ -56,9 +56,10 @@ _EPILOG = """\
   secemail audit company.com --json       # JSON output for CI/SIEM
 
   secemail spoof employee@client.com --from ceo@client.com
-                                          # DRY-RUN (does not send)
+                                          # Sends a real SMTP message
   secemail spoof employee@client.com --from ceo@client.com --auth client.com
-                                          # Real send (authorization required)
+                                          # Adds a defensive allowlist (warns
+                                          # if target/from fall outside)
   secemail spoof employee@client.com --from ceo@client.com --auth client.com \\
        --campaign --capture-url https://lure.your-operator.tld
                                           # Campaign preset: track + forensic headers
