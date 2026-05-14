@@ -83,6 +83,12 @@ def _rewrite_audit(rest: List[str]) -> List[str]:
         return ["--help"]
 
     target = rest[0]
+    if not target.strip():
+        _exit_usage(
+            "audit needs a non-empty TARGET.\n"
+            "  secemail audit company.com\n"
+            "  secemail audit ./mail.eml"
+        )
     extra = rest[1:]
     out: List[str] = []
 

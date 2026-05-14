@@ -290,6 +290,12 @@ def load_input(path: Optional[str]) -> bytes:
             raise ValueError("--file - read 0 bytes from stdin.")
         return data
 
+    # Empty-string path (`--file ""`) is a user mistake, not a stdin request.
+    if path is not None and not path.strip():
+        raise ValueError(
+            "--file cannot be empty. Pass a real path or `--file -` to read from stdin."
+        )
+
     if path:
         try:
             with open(path, "rb") as fh:
@@ -360,7 +366,7 @@ def _resolve_campaign_name(args: argparse.Namespace) -> str:
     This keeps the dashboard human-friendly even when not explicitly named.
     """
     explicit = getattr(args, "campaign_name", None)
-    if explicit:
+    if explicit and explicit.strip():
         return explicit.strip()
 
     import time
@@ -831,6 +837,15 @@ def _main_impl(argv: Optional[Sequence[str]] = None) -> int:
     # -----------------------------------------------------------------
     # AUDIT MODE
     # -----------------------------------------------------------------
+    # Reject obviously-empty --email up front, before the load_input fallback
+    # turns it into a misleading "No input received on stdin" message.
+    if args.email is not None and not args.email.strip():
+        return _emit_error(
+            args,
+            "--email cannot be empty. Pass a domain (e.g. company.com) or an address "
+            "(e.g. user@company.com).",
+            code="empty_target",
+        )
     try:
         with Spinner("Analyzing SPF/DKIM/DMARC/ARC configuration...", enabled=animate_enabled):
             domain_to_audit = args.email

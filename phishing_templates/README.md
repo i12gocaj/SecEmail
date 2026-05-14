@@ -1,6 +1,6 @@
 # Phishing templates — authorized engagements
 
-This directory contains **5 parameterizable HTML templates** with operational-grade visual quality for Red Team campaigns backed by written contractual authorization.
+This directory contains **6 parameterizable email templates plus 1 landing page** with operational-grade visual quality, for Red Team campaigns backed by written contractual authorization.
 
 ## Usage contract
 

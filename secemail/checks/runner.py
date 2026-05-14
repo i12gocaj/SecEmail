@@ -55,7 +55,10 @@ def _looks_like_eml(raw: bytes) -> None:
     headers_blob = head[: sep_idx if sep_idx >= 0 else len(head)]
     # Must contain at least one well-formed header line.
     import re as _re
-    header_pattern = _re.compile(rb"(?m)^[A-Za-z][A-Za-z0-9\-]{1,40}:[ \t]")
+    # Header name length: RFC 5322 §2.2 permits up to 998 bytes per line.
+    # We allow up to 60 chars to accept long real-world Microsoft/Exchange
+    # header names (e.g. X-MS-Exchange-Organization-AuthAs).
+    header_pattern = _re.compile(rb"(?m)^[A-Za-z][A-Za-z0-9\-]{1,60}:[ \t]")
     if not header_pattern.search(headers_blob):
         raise ValueError(
             "Content does not look like an RFC 5322 email message "

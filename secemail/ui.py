@@ -141,56 +141,69 @@ def render_text(report: AuditReport, style: UIStyle) -> str:
 
     action_items = collect_action_items(report)
     if action_items:
+        import textwrap
         lines.append(style.title("🚀 PRIORITY REMEDIATION ACTIONS"))
         for idx, action in enumerate(action_items[:10], start=1):
-            lines.append(f"  {style.color(str(idx)+'.', 'cyan')} {action}")
+            # Wrap to fit in 80 cols. The indent uses 5 chars ("  N. ") so we
+            # have 75 useful chars; continuation lines align to that column.
+            wrapped = textwrap.fill(action, width=75)
+            first_line, *rest = wrapped.split("\n")
+            lines.append(f"  {style.color(str(idx)+'.', 'cyan')} {first_line}")
+            for cont in rest:
+                lines.append(f"     {cont}")
         lines.append("")
 
     lines.append(style.title("🛡️  AUDIT RESULTS (SPF/DKIM/DMARC/ARC)"))
+    import textwrap as _tw
+    def _wrap_item(text: str, lead_indent: int, cont_indent: int) -> str:
+        # Wrap long item text into 78-col-friendly continuations.
+        return _tw.fill(
+            text,
+            width=78,
+            initial_indent=" " * lead_indent,
+            subsequent_indent=" " * cont_indent,
+        )
+
     for check in report.checks:
         lines.append(f"{style.status(check.status)} {style.color(check.protocol, 'bold')}")
         if check.evidence:
             lines.append(f"      Evidence: {check.evidence}")
         for d in check.details:
-            lines.append(f"      • {d}")
+            lines.append(_wrap_item(f"• {d}", lead_indent=6, cont_indent=8))
 
         if check.missing or check.recommendations or check.exact_fixes or check.implications:
             lines.append("")
         if check.missing:
             lines.append(f"      {style.color('➤ Missing:', 'red')}")
             for item in check.missing:
-                lines.append(f"        - {item}")
+                lines.append(_wrap_item(f"- {item}", lead_indent=8, cont_indent=10))
         if check.recommendations:
             lines.append(f"      {style.color('➤ Recommendation:', 'cyan')}")
             for rec in unique_preserve_order(check.recommendations):
-                lines.append(f"        - {rec}")
+                lines.append(_wrap_item(f"- {rec}", lead_indent=8, cont_indent=10))
         if check.exact_fixes:
             lines.append(f"      {style.color('➤ Technical fix (DNS):', 'green')}")
             for fix in unique_preserve_order(check.exact_fixes):
-                lines.append(f"        - {fix}")
+                lines.append(_wrap_item(f"- {fix}", lead_indent=8, cont_indent=10))
         if check.implications:
             lines.append(f"      {style.color('➤ Security risk:', 'magenta')}")
             for impact in unique_preserve_order(check.implications):
-                lines.append(f"        - {impact}")
+                lines.append(_wrap_item(f"- {impact}", lead_indent=8, cont_indent=10))
 
-        # Human explanation, wrapped to 78 cols to stay readable in 80-col terminals.
+        # Human explanation, wrapped to fit within an 80-col terminal.
+        # The icon "💡 In plain terms: " takes ~20 visible cols, so we wrap the
+        # text body to width=60 and prepend the icon to the first line.
         from .explain import explain_check
         human = explain_check(check)
         if human:
             import textwrap
-            wrapped = textwrap.fill(
-                human,
-                width=78,
-                initial_indent="      ",
-                subsequent_indent="         ",
-            )
-            # Prefix the first line with the icon
-            wrapped_with_icon = wrapped.replace(
-                "      ",
-                f"      {style.color('💡 In plain terms:', 'bold')} ",
-                1,
-            )
-            lines.append(wrapped_with_icon)
+            body_lines = textwrap.wrap(human, width=54)
+            if body_lines:
+                lines.append(
+                    f"      {style.color('💡 In plain terms:', 'bold')} {body_lines[0]}"
+                )
+                for cont in body_lines[1:]:
+                    lines.append(f"         {cont}")
 
         lines.append("")
 
@@ -228,6 +241,14 @@ def render_text(report: AuditReport, style: UIStyle) -> str:
     # Final human verdict
     from .explain import explain_summary
     lines.append("")
-    lines.append(f"  {style.color('💡 Verdict:', 'bold')} {explain_summary(report)}")
+    import textwrap as _tw_v
+    verdict = explain_summary(report)
+    # Wrap to fit in 80-col terminals. Icon prefix `💡 Verdict: ` is ~12 chars
+    # so the body wraps at width=64 and continuation lines align to the icon.
+    body = _tw_v.wrap(verdict, width=64)
+    if body:
+        lines.append(f"  {style.color('💡 Verdict:', 'bold')} {body[0]}")
+        for cont in body[1:]:
+            lines.append(f"              {cont}")
 
     return "\n".join(lines)

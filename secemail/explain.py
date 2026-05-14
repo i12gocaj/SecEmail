@@ -180,7 +180,9 @@ def explain_check(check) -> Optional[str]:
                 "or we don't know which DNS subdomain (the 'selector', for example "
                 "`s1._domainkey.your-domain.com`) holds the public key. Without that seal, "
                 "anyone relaying the message can change its body and the recipient gets no signal. "
-                "Configure DKIM at your mail provider; they hand you a DNS record to publish."
+                "If you suspect the domain does sign its mail, rerun with `--enumerate-dkim` "
+                "to auto-discover common selectors, or pass `--dkim-selector <name>` "
+                "(e.g. `google`, `selector1`, `default`) directly."
             )
         if "rsa-sha1" in details:
             return (
@@ -394,9 +396,10 @@ def explain_spoof_outcome(spoof_result) -> str:
                 "the sending domain's reputation, and the recipient's filters."
             )
         return (
-            "The recipient MX accepted the SMTP connection. Watch out: acceptance "
-            "is NOT the same as Inbox delivery. Without a lookalike domain + own "
-            "SPF/DKIM/DMARC + a reputable relay, the mail likely lands in Junk/Spam."
+            "The recipient's mail server accepted the message at the SMTP handshake. "
+            "That is not the same as 'arrived in the Inbox': without a lookalike "
+            "domain (with its own SPF/DKIM/DMARC) and a reputable relay, expect it "
+            "in Spam or Junk."
         )
 
     if status == "rejected_by_all_mx":
