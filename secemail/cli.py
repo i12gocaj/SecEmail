@@ -296,15 +296,24 @@ def load_input(path: Optional[str]) -> bytes:
             raise ValueError(f"File is empty: {path}")
         return data
 
+    # Explicit stdin: `--file -` (the only supported way to pipe a message).
+    if path == "-":
+        if sys.stdin.isatty():
+            raise ValueError("--file - requires stdin to be a pipe, not a TTY.")
+        data = sys.stdin.buffer.read()
+        if not data:
+            raise ValueError("--file - read 0 bytes from stdin.")
+        return data
+
     if sys.stdin.isatty():
         raise ValueError(
-            "No input received. Use --file, --email, or pipe via stdin.\n"
-            "Example: cat mail.eml | secemail"
+            "No input received. Use --file PATH, --email DOMAIN, or pipe via `--file -`.\n"
+            "Example: cat mail.eml | secemail --file -"
         )
 
     data = sys.stdin.buffer.read()
-    if not data and not sys.stdin.isatty():
-        raise ValueError("No input received. Use --file, --email, or pipe the message via stdin.")
+    if not data:
+        raise ValueError("No input received on stdin.")
     return data
 
 
@@ -414,9 +423,10 @@ def _emit_error(
 ) -> int:
     """Emit an error consistently.
 
-    - In --json mode: prints a ``{schema_version, error: {code, message}}``
-      object to stdout (parseable by jq/SIEM) and a readable message to stderr.
-    - In text mode: stderr only.
+    - In --json mode: a single ``{schema_version, error: {code, message}}``
+      object to stdout, parseable by jq/SIEM. Nothing on stderr to keep
+      combined-stream consumers clean.
+    - In text mode: a single readable line on stderr.
     """
     if getattr(args, "json", False):
         payload = {
@@ -424,12 +434,13 @@ def _emit_error(
             "error": {"code": code, "message": message},
         }
         print(json.dumps(payload, indent=2, ensure_ascii=False))
-    print(f"Error: {message}", file=sys.stderr)
+    else:
+        print(f"Error: {message}", file=sys.stderr)
     return exit_code
 
 
 # ---------------------------------------------------------------------------
-# Subcomandos
+# Subcommands
 # ---------------------------------------------------------------------------
 
 
@@ -530,16 +541,20 @@ def _run_report(args: argparse.Namespace) -> int:
                 render_campaign_report_rich(report)
                 rendered = True
             except Exception:
+                if os.environ.get("SECEMAIL_DEBUG"):
+                    raise
                 rendered = False
         if not rendered:
             print(render_campaign_report(report))
-        # Discoverability: if no recipients, say where we looked.
+        # Discoverability: when the user explicitly filtered a session and
+        # got nothing, hint where we looked. We skip this for the default
+        # empty state because the rich panel already shows a "no data" panel
+        # with the example command to launch a campaign.
         totals = report.get("totals") or {}
-        if not totals.get("recipients"):
+        if not totals.get("recipients") and args.session_id:
             tp = tracking or DEFAULT_TRACKING_PATH
             cp = captures or Path.home() / ".secemail" / "captures.jsonl"
-            print(f"\n[dim](Looking in: {tp} and {cp})[/dim]" if use_rich else
-                  f"\n(Looking in: {tp} and {cp})", file=sys.stderr)
+            print(f"\n(Looking in: {tp} and {cp})", file=sys.stderr)
     return 0
 
 
@@ -592,6 +607,21 @@ def _main_impl(argv: Optional[Sequence[str]] = None) -> int:
             from .wizard import run_wizard
             return run_wizard()
         argv = rewritten
+
+    # ─── No subcommand + non-TTY stdin guard ──────────────────────────
+    # Prevent `echo foo | secemail` from silently auditing stdin as a .eml.
+    # The user must opt-in explicitly with `--file -` or `--file /dev/stdin`
+    # if they want to pipe a message.
+    if not effective_argv and not sys.stdin.isatty():
+        print(
+            "Error: no subcommand and no input. Use one of:\n"
+            "  secemail audit company.com\n"
+            "  secemail audit ./mail.eml\n"
+            "  cat mail.eml | secemail --file -\n"
+            "  secemail wizard",
+            file=sys.stderr,
+        )
+        return 2
 
     args = parse_args(argv)
 
@@ -905,6 +935,9 @@ def _main_impl(argv: Optional[Sequence[str]] = None) -> int:
                 rendered = True
             except Exception:
                 # If rich is missing or fails, fall back to the plain renderer.
+                # Set SECEMAIL_DEBUG=1 to surface the underlying exception.
+                if os.environ.get("SECEMAIL_DEBUG"):
+                    raise
                 rendered = False
         if not rendered:
             print(render_text(report, style=style))

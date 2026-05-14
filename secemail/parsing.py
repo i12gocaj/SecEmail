@@ -427,18 +427,26 @@ def spf_lookup_count_recursive(
                 _walk(target, depth + 1)
             elif token.startswith(("a:", "mx:", "exists:", "ptr:")) or token in {"a", "mx", "ptr"}:
                 # Estos disparan DNS pero no se expanden en SPF recursivamente.
-                # Aun así, contamos un lookup adicional según RFC 7208.
-                # Si target ≠ dominio actual, comprobamos void.
-                if target != clean:
+                # Aun así, contamos un lookup adicional según RFC 7208 §4.6.4.
+                # Para `exists:`/`a:`/`mx:` con target externo, comprobamos si la
+                # resolución es void (NXDOMAIN-like): ninguno de TXT/MX/CNAME
+                # devuelve datos. Eso es exactamente lo que el RFC pide contar.
+                if target != clean and target:
                     try:
                         sub_txt = resolver.txt(target)
                     except Exception:
                         sub_txt = []
-                    # Para a/mx/exists no esperamos SPF, sólo void si NXDOMAIN-like.
-                    if not sub_txt and not select_spf_record(sub_txt):
-                        # heurística: void si no hay ningún TXT en absoluto.
-                        # No incrementamos void aquí para evitar falsos positivos en MX/A que no tienen TXT.
-                        pass
+                    try:
+                        sub_mx = resolver.mx(target)
+                    except Exception:
+                        sub_mx = []
+                    try:
+                        sub_cname = resolver.cname(target)
+                    except Exception:
+                        sub_cname = []
+                    if not sub_txt and not sub_mx and not sub_cname:
+                        # Resolución vacía en todos los tipos consultables → void.
+                        state["void"] += 1
 
     _walk(domain, depth=0)
 

@@ -155,8 +155,11 @@ def explain_check(check) -> Optional[str]:
             )
         if "+all" in details:
             return (
-                "Your SPF allows sending from ANY IP (`+all`). "
-                "Equivalent to having no SPF. Change to `-all` or `~all`."
+                "Your domain's server list ends in `+all`, which means "
+                "'every server on the internet is allowed to send as me'. "
+                "That is identical to publishing no list at all. Replace "
+                "the last term with `-all` (reject everyone else) or `~all` "
+                "(soft-fail while you validate)."
             )
         if "duplic" in details:
             return (
@@ -172,8 +175,11 @@ def explain_check(check) -> Optional[str]:
     if proto == "DKIM":
         if "does not exist" in details or "not found" in details or "selector" in missing or "no existe" in details or "no se encontró" in details:
             return (
-                "The domain does not sign its mail with DKIM (or you didn't tell us which "
-                "selector to try). Without DKIM, receivers cannot verify the message was unmodified."
+                "Your domain does not put a cryptographic seal on its outbound mail, "
+                "or we don't know which DNS subdomain (the 'selector', for example "
+                "`s1._domainkey.your-domain.com`) holds the public key. Without that seal, "
+                "anyone relaying the message can change its body and the recipient gets no signal. "
+                "Configure DKIM at your mail provider; they hand you a DNS record to publish."
             )
         if "rsa-sha1" in details:
             return (
@@ -194,9 +200,11 @@ def explain_check(check) -> Optional[str]:
     if proto == "DMARC":
         if "does not exist" in details or "monitor" in details or "p=none" in details or "no existe" in details:
             return (
-                "Domain has NO effective DMARC policy. Without DMARC, receivers do not know "
-                "what to do with mail forging your domain. "
-                "It is like having an alarm that does not alert anyone."
+                "Your domain has no published rule telling Gmail or Outlook how to react "
+                "when somebody fakes mail from you. With the rule missing, a phishing email "
+                "pretending to be from your CEO gets delivered as if it were real. "
+                "Publish a DMARC record in monitor mode (`p=none` with a reporting address) "
+                "to start collecting evidence without blocking anything yet."
             )
         if "pct" in details and ("<" in details or "less" in details or "menos" in details):
             return (
@@ -289,6 +297,8 @@ def _explain_pass(proto: str) -> Optional[str]:
         return "DANE deployed: the MX certificates are authenticated via DNSSEC."
     if proto == "BIMI":
         return "BIMI with VMC: compatible receivers will display the brand logo."
+    if proto == "LOOKALIKE":
+        return "Domain name has no obvious lookalike or homograph patterns."
     return None
 
 

@@ -32,7 +32,7 @@ import time
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 from urllib.parse import quote, urlencode, urlparse
 
 

@@ -78,11 +78,11 @@ def _print_intro(console: "Console") -> None:
     options.add_column(justify="right", style="bold cyan", width=3)
     options.add_column(style="bold")
     options.add_column(style="dim")
-    options.add_row("1", "Audit", "Analyze authentication of a domain or .eml")
-    options.add_row("2", "Spoofing (1 target)", "Send one mail spoofing an authorized domain")
-    options.add_row("3", "Campaign (CSV)", "Bulk send to a list of targets from a CSV file")
-    options.add_row("4", "Capture", "Start the capture server for a campaign")
-    options.add_row("5", "Dashboard", "Aggregate report of opens, clicks and submits")
+    options.add_row("1", "Audit", "Tell me if a domain is protected against being faked")
+    options.add_row("2", "Spoofing (1 target)", "Send one test email impersonating an authorized domain")
+    options.add_row("3", "Campaign (CSV)", "Same as Spoofing but for a list of targets in a CSV")
+    options.add_row("4", "Capture", "Start the landing page that records clicks and submitted credentials")
+    options.add_row("5", "Dashboard", "Show how many people opened, clicked and submitted")
     options.add_row("q", "Quit", "")
 
     console.print()
@@ -101,7 +101,14 @@ def _print_intro(console: "Console") -> None:
 
 
 def _flow_audit(console: "Console") -> int:
-    """Domain or .eml audit — autodetect."""
+    """Domain or .eml audit, autodetect."""
+    console.print()
+    console.print(Panel(
+        "I will check the DNS records for SPF, DKIM and DMARC and tell you, "
+        "in one sentence, whether somebody can send mail pretending to be this domain.",
+        border_style="cyan",
+        padding=(0, 2),
+    ))
     target = Prompt.ask(
         "[bold]Domain or path to .eml[/bold] (e.g. company.com or ./mail.eml)"
     )
@@ -283,6 +290,15 @@ def _flow_campaign(console: "Console") -> int:
 
 def _flow_capture(console: "Console") -> int:
     """Start the local capture server."""
+    console.print()
+    console.print(Panel(
+        "I will start an HTTP server that hosts the phishing landing page and writes "
+        "every open, click and form submission to ~/.secemail/captures.jsonl. "
+        "It binds to 127.0.0.1 by default. Put it behind Cloudflare Tunnel or nginx "
+        "with TLS to make it reachable from outside.",
+        border_style="cyan",
+        padding=(0, 2),
+    ))
     port_str = Prompt.ask("[bold]Port[/bold]", default="8443")
     bind = Prompt.ask(
         "[dim]Interface (127.0.0.1=local only; 0.0.0.0=exposed)[/dim]",
@@ -310,7 +326,15 @@ def _flow_capture(console: "Console") -> int:
 
 
 def _flow_dashboard(console: "Console") -> int:
-    """Campaign dashboard — list available campaigns and pick one."""
+    """Campaign dashboard. Lists available campaigns and lets you pick one."""
+    console.print()
+    console.print(Panel(
+        "I will read the local logs and show, per campaign, recipients reached, "
+        "open rate, click rate, submit rate, plus a one-line interpretation against "
+        "typical phishing benchmarks (5 to 15 percent clicks is normal).",
+        border_style="cyan",
+        padding=(0, 2),
+    ))
     from .tracking import list_sessions, render_sessions_list
 
     try:

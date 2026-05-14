@@ -24,6 +24,38 @@ The campaign dashboard after a few people clicked and a couple of them entered c
 
 ![Campaign dashboard](docs/screenshots/dashboard.svg)
 
+## How email authentication works in 1 minute
+
+When you send a paper letter, the envelope shows a return address but nothing stops you writing whatever you want on it. Email started the same way: any server could write `From: ceo@yourcompany.com` on a message and the receiving server had no built-in way to tell whether the claim was true. Phishing exploits exactly this gap. The three specs below are the layers the internet has bolted on top to close it.
+
+The first layer is a server list. The domain that claims to send the mail publishes, in public DNS, the list of machines it actually uses. When a message arrives, the receiver looks up that list and checks whether the connecting machine is on it. If your domain is `acme.com` and Gmail sees mail from it coming from a random server in another country, the server is not on the list, so the check fails. This layer is called **SPF**.
+
+The second layer is a cryptographic seal. The sending server attaches a signature computed over the body and certain headers using a private key it controls. The corresponding public key sits in DNS under the domain. The receiver fetches the public key, recomputes the signature and confirms two things at once: the message has not been altered in transit, and it really was signed by somebody who controls the domain's DNS. This layer is called **DKIM**.
+
+The third layer ties the first two to the visible sender and tells receivers what to do when both fail. A message can technically pass SPF (sent from a known server) and DKIM (correctly signed) but for a different domain than the one the user sees in their inbox. That gap is what attackers exploit. The domain publishes a single rule, **DMARC**, that says "if neither SPF nor DKIM passes for the visible From, treat the mail as none / quarantine / reject". Without that rule, receivers default to "we have no idea, deliver it anyway". With it, your domain has a published policy that Gmail, Outlook and the rest actually enforce. **ARC**, **MTA-STS**, **TLS-RPT**, **DANE** and **BIMI** are complements that come after this trio is in place.
+
+## Glossary
+
+If you are new to email auth, read this first. One sentence per term, in plain English.
+
+- **SPF**. A list, published in DNS by a domain, of which servers are allowed to send mail in its name. Think of it as the guest list at a club: if your IP is not on it, the bouncer questions you.
+- **DKIM**. A cryptographic signature the sending server adds to each message, verified by the receiver against a public key in DNS. Like a wax seal on a letter: tamper with it on the way and the seal breaks.
+- **DMARC**. The rule a domain publishes telling receivers like Gmail or Outlook what to do when a message claiming to be from it fails SPF and DKIM. Without it, "fake mail from your domain" has no defined reaction.
+- **ARC**. A chain of signatures added by intermediate forwarders (mailing lists, gateways) so DMARC still works after a message has been relayed. Initials on every page of a passed document.
+- **MTA-STS**. A policy saying "always talk to my mail servers over encrypted TLS, never plain". Stops a network attacker from forcing a downgrade.
+- **TLS-RPT**. A reporting channel that tells you when another server failed to talk to yours over TLS. Companion to MTA-STS.
+- **DANE**. An alternative way to pin your mail server's TLS certificate via DNSSEC. Used mostly by governments and banks.
+- **BIMI**. A spec for showing your brand logo next to your mail in supporting inboxes once you have strict DMARC. Cosmetic.
+- **Envelope From vs Header From**. Every email has two From addresses: the envelope one is what SMTP uses for routing (think the envelope of a paper letter), the header one is what the user sees (think the letterhead inside). Spoofers exploit the gap.
+- **Alignment**. The check that the domain in the From you see matches the domain that passed SPF or DKIM. If they don't match, DMARC treats the mail as forged.
+- **Verified d=**. When DKIM verifies a signature, the `d=` tag tells you which domain actually signed it. Receivers trust that domain, not whatever the sender wrote in the visible From.
+- **Lookalike domain**. A registered domain that visually resembles a real one (`rnicrosoft.com`, `paypaI.com`, `g00gle.com`, Cyrillic `аpple.com`). Attackers use them to impersonate brands with valid SPF/DKIM/DMARC on the lookalike.
+- **Punycode / IDN homograph**. The encoding that lets non-Latin characters appear in domain names. An attacker can register `xn--pple-43d.com` and have it render as `аpple.com` with a Cyrillic a.
+- **Relay (authenticated SMTP)**. A third-party SMTP service (Mailgun, SendGrid, SES, Postmark) that sends mail on your behalf from clean IPs with good reputation. Practically required because residential and most cloud IPs are on blocklists.
+- **Lure URL**. The clickable link inside a phishing email that takes the victim to the simulated landing page.
+- **Capture server**. The HTTP server SecEmail brings up (`secemail capture`) that hosts the landing page, records opens (tracking pixel), clicks, and any credentials submitted.
+- **session_id / campaign-name**. The label that groups every send, open, click and submit into one campaign in the dashboard. If you don't pass one, SecEmail makes a readable default like `acme.com-20260513-1842`.
+
 ## Why use it instead of something else
 
 There are plenty of tools that check SPF and DMARC. Most of them tell you what is published and stop there. SecEmail is built so you can answer the next question, which is usually "ok, what now?":
@@ -130,9 +162,9 @@ cd SecEmail
 ./install.sh
 ```
 
-That's it. The installer detects your Python version, creates a local virtual environment in `.venv/`, installs SecEmail and the dependencies, and verifies that `secemail --version` works.
+That's it. The installer detects your Python version, creates a local virtual environment in `.venv/`, installs SecEmail and the dependencies, and verifies that `secemail --version` works. Running `./install.sh` again is safe: it reuses the existing `.venv/` and reinstalls on top.
 
-To use the tool, activate the environment once per shell:
+A virtual environment (venv) is a private folder of Python packages that does not touch your system Python. SecEmail uses one by default so it can't break other tools on your machine. You need to "activate" it once per shell before running `secemail`.
 
 ```bash
 source .venv/bin/activate

@@ -78,6 +78,10 @@ def _rewrite_audit(rest: List[str]) -> List[str]:
             "  secemail audit company.com --full     # includes MTA-STS/TLS-RPT/DANE/BIMI"
         )
 
+    # `audit --help` / `audit -h` → fall through to argparse help.
+    if rest[0] in ("--help", "-h"):
+        return ["--help"]
+
     target = rest[0]
     extra = rest[1:]
     out: List[str] = []
@@ -89,7 +93,10 @@ def _rewrite_audit(rest: List[str]) -> List[str]:
     while i < len(extra):
         a = extra[i]
         if a == "--full":
-            out.extend(["--check-modern", "--enumerate-dkim"])
+            # Consistent with the wizard: adds MTA-STS/TLS-RPT/DANE/BIMI.
+            # DKIM enumeration is noisy (~30 lookups) and stays opt-in
+            # via `--enumerate-dkim`.
+            out.append("--check-modern")
         elif a == "--quick":
             # default is already "quick"; nothing explicit to do.
             pass
@@ -119,13 +126,28 @@ def _rewrite_spoof(rest: List[str]) -> List[str]:
       --auth DOM →  --authorize-domain DOM (repeatable)
       --campaign →  --track + --add-forensic-headers (recommended for a real campaign)
     """
-    if not rest or rest[0].startswith("-"):
+    if not rest:
         _exit_usage(
-            "spoof requires a TARGET (recipient email).\n"
+            "spoof requires a TARGET or --targets-file.\n"
             "  secemail spoof employee@client.com --from ceo@client.com\n"
-            "  secemail spoof employee@client.com --from ceo@client.com --auth client.com\n"
-            "  secemail spoof employee@client.com --from ceo@client.com --auth client.com "
-            "--campaign --capture-url https://lure.your-operator.tld"
+            "  secemail spoof --targets-file targets.csv --from ceo@client.com\n"
+            "  secemail spoof --help"
+        )
+
+    # `spoof --help` / `spoof -h` → fall through to argparse help.
+    if rest[0] in ("--help", "-h"):
+        return ["--help"]
+
+    # Flag-first invocations (no positional TARGET):
+    # `spoof --targets-file targets.csv ...` is a valid bulk campaign mode.
+    # Pass-through to the classic parser without injecting --spoof-test.
+    if rest[0].startswith("-"):
+        if "--targets-file" in rest:
+            return list(rest)
+        _exit_usage(
+            "spoof needs a TARGET (positional) or --targets-file CSV.\n"
+            "  secemail spoof employee@client.com --from ceo@client.com\n"
+            "  secemail spoof --targets-file targets.csv --from ceo@client.com"
         )
 
     target = rest[0]
