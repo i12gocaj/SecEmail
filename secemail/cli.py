@@ -279,6 +279,17 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
 
 
 def load_input(path: Optional[str]) -> bytes:
+    # Explicit stdin: `--file -` (the only supported way to pipe a message).
+    # Must come BEFORE the `if path:` branch — otherwise we try to open
+    # the literal filename "-".
+    if path == "-":
+        if sys.stdin.isatty():
+            raise ValueError("--file - requires stdin to be a pipe, not a TTY.")
+        data = sys.stdin.buffer.read()
+        if not data:
+            raise ValueError("--file - read 0 bytes from stdin.")
+        return data
+
     if path:
         try:
             with open(path, "rb") as fh:
@@ -294,15 +305,6 @@ def load_input(path: Optional[str]) -> bytes:
 
         if not data.strip():
             raise ValueError(f"File is empty: {path}")
-        return data
-
-    # Explicit stdin: `--file -` (the only supported way to pipe a message).
-    if path == "-":
-        if sys.stdin.isatty():
-            raise ValueError("--file - requires stdin to be a pipe, not a TTY.")
-        data = sys.stdin.buffer.read()
-        if not data:
-            raise ValueError("--file - read 0 bytes from stdin.")
         return data
 
     if sys.stdin.isatty():

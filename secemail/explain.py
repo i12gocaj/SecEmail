@@ -43,9 +43,10 @@ def explain_smtp_attempt(
                 "Inbox placement depends on the relay's reputation and the sending domain."
             )
         return (
-            "The MX accepted the SMTP connection. That does NOT mean it lands in Inbox: "
-            "it will most likely go to Junk/Spam unless you use a lookalike domain with "
-            "its own SPF/DKIM/DMARC and a reputable relay."
+            "The recipient's mail server accepted the message at the SMTP handshake. "
+            "That is not the same as 'landed in the inbox': without a lookalike "
+            "domain that has its own SPF/DKIM/DMARC and a reputable relay "
+            "(Mailgun, SendGrid, SES, Postmark), expect it in Spam or Junk."
         )
 
     # --- Rejections: by message patterns (ordered by specificity) ---------
@@ -188,8 +189,11 @@ def explain_check(check) -> Optional[str]:
             )
         if "l=" in details:
             return (
-                "Your DKIM uses the `l=` (length) tag, which enables append abuse: an attacker "
-                "can append content to the message without invalidating the signature. Remove it."
+                "Your DKIM is configured to sign only the first N bytes of the body "
+                "(`l=` tag). An attacker can paste extra paragraphs at the end of "
+                "the message and the signature still verifies, letting them inject "
+                "phishing content into a legit-looking email. Remove the `l=` tag "
+                "from the signing config."
             )
         if "t=y" in details:
             return (

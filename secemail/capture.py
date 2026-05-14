@@ -382,6 +382,14 @@ def serve_forever(
         f"storage={cfg.storage_path}",
         file=sys.stderr,
     )
+    if bind in ("127.0.0.1", "localhost", "::1"):
+        print(
+            "[capture] NOTE: bound to localhost only. Victims will not reach this "
+            "directly. Front this port with Cloudflare Tunnel, ngrok, or an "
+            "nginx/TLS reverse proxy and verify the public URL resolves before "
+            "sending any lure.",
+            file=sys.stderr,
+        )
     try:
         server.serve_forever()
     except KeyboardInterrupt:

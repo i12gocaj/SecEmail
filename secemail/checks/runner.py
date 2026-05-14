@@ -39,6 +39,31 @@ def _normalize_crlf(raw: bytes) -> tuple[bytes, bool]:
     return normalized, True
 
 
+def _looks_like_eml(raw: bytes) -> None:
+    """Refuse content that clearly is not an RFC 5322 message.
+
+    A real .eml has at least one header line (``Name: value``) before the first
+    blank line. This catches the common mistake of pointing ``--file`` at a
+    binary, a CSV, /etc/passwd, etc. We are deliberately permissive so that
+    minimal headers-only files still pass.
+    """
+    head = raw[:8192]
+    # Find the headers/body boundary (CRLF CRLF or LF LF).
+    sep_idx = head.find(b"\r\n\r\n")
+    if sep_idx < 0:
+        sep_idx = head.find(b"\n\n")
+    headers_blob = head[: sep_idx if sep_idx >= 0 else len(head)]
+    # Must contain at least one well-formed header line.
+    import re as _re
+    header_pattern = _re.compile(rb"(?m)^[A-Za-z][A-Za-z0-9\-]{1,40}:[ \t]")
+    if not header_pattern.search(headers_blob):
+        raise ValueError(
+            "Content does not look like an RFC 5322 email message "
+            "(no `Header: value` line found before the body). "
+            "Make sure --file points to a .eml export, not to plain text."
+        )
+
+
 def attach_dns_diagnostics(report: AuditReport, resolver: DnsResolver) -> None:
     report.dns_backend = resolver.backend
     report.dns_errors = resolver.errors[:]
@@ -59,7 +84,11 @@ def audit_email(
     if not raw_email.strip():
         raise ValueError("Email content is empty.")
 
-    # A6: normaliza line endings a CRLF antes de cualquier verificación criptográfica.
+    # Sanity check: refuse content that obviously isn't an RFC 5322 message.
+    # Catches the common mistake of pointing --file at /etc/passwd or a binary.
+    _looks_like_eml(raw_email)
+
+    # A6: normalize line endings to CRLF before any cryptographic verification.
     raw_email, crlf_was_normalized = _normalize_crlf(raw_email)
 
     try:

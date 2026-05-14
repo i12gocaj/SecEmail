@@ -10,6 +10,18 @@ It does three things well:
 
 Everything runs offline against your own DNS. You get a guided menu by default so you don't need to memorize twenty flags.
 
+## Quick start
+
+```bash
+git clone https://github.com/i12gocaj/SecEmail.git && cd SecEmail && ./install.sh
+source .venv/bin/activate     # activate the local Python env (once per shell)
+secemail                       # open the interactive menu
+```
+
+That is everything. The installer takes about 30 seconds on a machine that already has Python 3.10 or newer.
+
+If you are brand new to email authentication, read the [How email authentication works in 1 minute](#how-email-authentication-works-in-1-minute) section first and keep the [Glossary](#glossary) open in a tab.
+
 ## What it looks like
 
 The interactive menu when you run `secemail` with no arguments:
@@ -239,6 +251,26 @@ SecEmail/
 ├── docs/screenshots/           Screenshots used by this README
 └── tests/                      167 tests + fixtures and snapshots
 ```
+
+## FAQ
+
+**Do I need permission to use this?**
+Yes. SecEmail is for authorized engagements only. Your contract with the client must allow you to send mail spoofing their domain. The forensic log in `~/.secemail/audit.jsonl` is what protects you when someone asks "did you send this?" six months later.
+
+**What if my IP is on a blocklist?**
+Likely it is. Most home, mobile and cloud IPs are listed on Spamhaus or similar. SecEmail will tell you (`Your IP is on an anti-spam blocklist...`) and the fix is the same in every case: use an authenticated relay like Mailgun, SendGrid, Amazon SES or Postmark. They send from clean IPs with reputation. Do not try to send directly from a residential ISP.
+
+**Where are credentials I capture stored?**
+Locally only, in `~/.secemail/captures.jsonl` on the machine running `secemail capture`. One JSON line per event (open, click, form submit). Nothing leaves your machine. Encrypt that folder at rest if your engagement requires it.
+
+**How is this different from GoPhish or Evilginx?**
+GoPhish is a campaign manager with a web UI and a database. Evilginx focuses on man-in-the-middle session-cookie theft. SecEmail is a CLI you run from a terminal: credential phishing plus DMARC/SPF/DKIM audits in one small tool, scriptable from a pipeline, with a forensic log per send. Different shapes for different jobs.
+
+**Can I use it on Windows?**
+Indirectly. Use WSL2 with Ubuntu. PowerShell-native support is not tested. On WSL the install steps are the Ubuntu ones, and `source .venv/bin/activate` works as-is.
+
+**The CLI keeps saying I have to activate the venv. What does that mean?**
+SecEmail installs into an isolated Python folder (`.venv/`) so it does not touch the rest of your system. To use the `secemail` command in a new terminal, you tell that terminal "use the packages in `.venv/`" by running `source .venv/bin/activate` once. Until you do, your shell does not know where `secemail` lives.
 
 ## License
 

@@ -140,10 +140,13 @@ def _rewrite_spoof(rest: List[str]) -> List[str]:
 
     # Flag-first invocations (no positional TARGET):
     # `spoof --targets-file targets.csv ...` is a valid bulk campaign mode.
-    # Pass-through to the classic parser without injecting --spoof-test.
+    # We still need to translate the short aliases (`--from`, `--to`, ...)
+    # before handing off to the classic parser.
     if rest[0].startswith("-"):
         if "--targets-file" in rest:
-            return list(rest)
+            extra = rest  # the whole rest is just flags
+            out: List[str] = []  # no positional --spoof-test
+            return _translate_spoof_flags(extra, out)
         _exit_usage(
             "spoof needs a TARGET (positional) or --targets-file CSV.\n"
             "  secemail spoof employee@client.com --from ceo@client.com\n"
@@ -153,6 +156,12 @@ def _rewrite_spoof(rest: List[str]) -> List[str]:
     target = rest[0]
     extra = rest[1:]
     out: List[str] = ["--spoof-test", target]
+    return _translate_spoof_flags(extra, out)
+
+
+def _translate_spoof_flags(extra: List[str], out: List[str]) -> List[str]:
+    """Translate the simplified spoof aliases (--from, --to, --auth, ...)
+    into the classic flag names. Shared by single-target and bulk paths."""
 
     i = 0
     campaign = False

@@ -173,11 +173,24 @@ def render_text(report: AuditReport, style: UIStyle) -> str:
             for impact in unique_preserve_order(check.implications):
                 lines.append(f"        - {impact}")
 
-        # One-line human explanation
+        # Human explanation, wrapped to 78 cols to stay readable in 80-col terminals.
         from .explain import explain_check
         human = explain_check(check)
         if human:
-            lines.append(f"      {style.color('💡 In plain terms:', 'bold')} {human}")
+            import textwrap
+            wrapped = textwrap.fill(
+                human,
+                width=78,
+                initial_indent="      ",
+                subsequent_indent="         ",
+            )
+            # Prefix the first line with the icon
+            wrapped_with_icon = wrapped.replace(
+                "      ",
+                f"      {style.color('💡 In plain terms:', 'bold')} ",
+                1,
+            )
+            lines.append(wrapped_with_icon)
 
         lines.append("")
 

@@ -397,10 +397,10 @@ def spf_lookup_count_recursive(
         spf_recs = select_spf_record(txt_records)
         if not spf_recs:
             state["void"] += 1
-            chain.append(f"{clean}: sin SPF (void lookup)")
+            chain.append(f"{clean}: no SPF (void lookup)")
             return
         if len(spf_recs) > 1:
-            errors.append(f"{clean} tiene múltiples registros SPF ({len(spf_recs)})")
+            errors.append(f"{clean} has multiple SPF records ({len(spf_recs)})")
             return
         record = spf_recs[0]
         tokens = spf_tokens(record)
@@ -426,12 +426,20 @@ def spf_lookup_count_recursive(
             if token.startswith("include:") or token.startswith("redirect="):
                 _walk(target, depth + 1)
             elif token.startswith(("a:", "mx:", "exists:", "ptr:")) or token in {"a", "mx", "ptr"}:
-                # Estos disparan DNS pero no se expanden en SPF recursivamente.
-                # Aun así, contamos un lookup adicional según RFC 7208 §4.6.4.
-                # Para `exists:`/`a:`/`mx:` con target externo, comprobamos si la
-                # resolución es void (NXDOMAIN-like): ninguno de TXT/MX/CNAME
-                # devuelve datos. Eso es exactamente lo que el RFC pide contar.
-                if target != clean and target:
+                # These trigger DNS but do not expand SPF recursively. We still
+                # count one lookup per RFC 7208 §4.6.4. For `exists:`/`a:`/`mx:`
+                # with an external target, we probe if the resolution is void
+                # (NXDOMAIN-like): no TXT/MX/CNAME data at all.
+                #
+                # Probe is gated by the same defensive cap as the main walker:
+                # once we are past the limit we stop issuing fresh DNS probes
+                # to avoid amplifying adversarial SPF with N×3 unbounded calls.
+                if (
+                    target != clean
+                    and target
+                    and "%{" not in target  # skip unexpanded macros (e.g. %{i}.tld)
+                    and state["lookups"] < max_lookups + 5
+                ):
                     try:
                         sub_txt = resolver.txt(target)
                     except Exception:
@@ -445,7 +453,6 @@ def spf_lookup_count_recursive(
                     except Exception:
                         sub_cname = []
                     if not sub_txt and not sub_mx and not sub_cname:
-                        # Resolución vacía en todos los tipos consultables → void.
                         state["void"] += 1
 
     _walk(domain, depth=0)
